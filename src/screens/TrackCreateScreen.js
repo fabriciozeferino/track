@@ -1,14 +1,41 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+//import '../_mockLocation';
+import React, { useContext, useCallback } from 'react';
+import { Text } from 'react-native-elements';
+import Map from '../components/Map';
+import { SafeAreaView, withNavigationFocus } from 'react-navigation';
+import { Context as LocationContext } from '../context/LocationContext';
+import useLocation from '../hooks/useLocation';
+import TrackForm from '../components/TrackForm';
+import { FontAwesome } from '@expo/vector-icons';
 
-const TrackCreateScreen = () => {
+const TrackCreateScreen = ({ isFocused }) => {
+  const {
+    state: { recording },
+    addLocation,
+  } = useContext(LocationContext);
+
+  const callback = useCallback(
+    (location) => {
+      addLocation(location, recording);
+    },
+    [recording]
+  );
+
+  const [error] = useLocation(isFocused || recording, callback);
+
   return (
-    <View>
-      <Text>TrackCreateScreen</Text>
-    </View>
+    <SafeAreaView forceInset={{ top: 'always' }}>
+      <Text h3>Create a Track</Text>
+      <Map />
+      {error ? <Text>Please enable location services</Text> : null}
+      <TrackForm />
+    </SafeAreaView>
   );
 };
 
-export default TrackCreateScreen;
+TrackCreateScreen.navigationOptions = {
+  title: 'Add Track',
+  tabBarIcon: <FontAwesome style={{ color: 'grey' }} name="plus" size={20} />,
+};
 
-const styles = StyleSheet.create({});
+export default withNavigationFocus(TrackCreateScreen);
