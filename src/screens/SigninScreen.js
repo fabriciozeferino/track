@@ -4,41 +4,39 @@ import { Text, Input, Button } from 'react-native-elements';
 import Spacer from '../components/Spacer';
 import { NavigationEvents } from 'react-navigation';
 import { Context as AuthContext } from '../context/AuthContext';
-import { FontAwesome } from '@expo/vector-icons';
 
-const SigninScreen = ({ errorMessage }) => {
+const SigninScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { signin, clearErrorMessage } = useContext(AuthContext);
+  const {
+    state: { errorMessage },
+    signin,
+    clearErrorMessage,
+  } = useContext(AuthContext);
 
   return (
     <View style={styles.container}>
       <NavigationEvents onWillFocus={clearErrorMessage} />
 
       <Spacer>
-        <Text h3>Sign in</Text>
+        <Text h3 style={{ marginVertical: 30 }}>
+          Sign in
+        </Text>
       </Spacer>
 
-      <Spacer />
-
       <Input
+        placeholder="Enter your Email"
         label="Email"
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
+        textContentType="emailAddress"
         autoCorrect={false}
-        leftIcon={
-          <FontAwesome
-            name="user"
-            size={24}
-            color="grey"
-            style={{ marginEnd: 5 }}
-          />
-        }
       />
 
       <Spacer />
       <Input
+        placeholder="Enter your Password"
         label="Password"
         value={password}
         onChangeText={setPassword}
@@ -46,23 +44,17 @@ const SigninScreen = ({ errorMessage }) => {
         autoCorrect={false}
         secureTextEntry
         textContentType="none"
-        leftIcon={
-          <FontAwesome
-            name="lock"
-            size={24}
-            color="grey"
-            style={{ marginEnd: 5 }}
-          />
-        }
       />
 
       {errorMessage ? (
         <Text style={styles.errorMessage}>{errorMessage}</Text>
       ) : null}
 
-      <Spacer>
-        <Button title="Sign in" onPress={() => signin({ email, password })} />
-      </Spacer>
+      <Button
+        title="Sign in"
+        style={{ marginHorizontal: 10, marginVertical: 30 }}
+        onPress={() => signin({ email, password })}
+      />
     </View>
   );
 };
