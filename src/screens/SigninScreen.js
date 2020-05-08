@@ -70,7 +70,7 @@ const SigninScreen = ({ navigation }) => {
           errorMessage={errors.email && 'Email is required'}
           returnKeyType="next"
           blurOnSubmit={false}
-          onSubmitEditing={() => this.password.focus()}
+          onSubmitEditing={() => password.focus()}
           placeholder="Email"
         />
 
@@ -87,7 +87,8 @@ const SigninScreen = ({ navigation }) => {
           textContentType="none"
           errorMessage={errors.password && 'Password is required'}
           blurOnSubmit={false}
-          ref={(input) => (this.password = input)}
+          ref={(input) => (password = input)}
+          onSubmitEditing={handleSubmit(onSubmit)}
           returnKeyType="done"
           placeholder="Password"
         />
