@@ -6,15 +6,10 @@ import { navigate } from '../navigationRef';
 const authReducer = (state, action) => {
   switch (action.type) {
     case 'add_error':
-      console.log({ ...state, errorMessage: action.payload });
-
       return { ...state, errorMessage: action.payload };
     case 'signin':
-      console.log('signin');
       return { errorMessage: '', token: action.payload };
     case 'clear_error_message':
-      console.log('clear_error_message');
-
       return { ...state, errorMessage: '' };
     default:
       return state;
@@ -46,11 +41,11 @@ const signin = (dispatch) => {
 
       navigate('TrackList');
     } catch (error) {
-      console.log('signinContext', error);
+      console.log(error);
 
       dispatch({
         type: 'add_error',
-        payload: 'Something went wrong with sign in',
+        payload: 'Incorrect Email or Password',
       });
     }
   };
