@@ -9,6 +9,6 @@ export default Spacer;
 
 const styles = StyleSheet.create({
   spacer: {
-    margin: 10,
+    margin: 5,
   },
 });

@@ -1,10 +1,10 @@
 import React from 'react';
+import { StatusBar } from 'react-native';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import AccountScreen from './src/screens/AccountScreen';
 import SigninScreen from './src/screens/SigninScreen';
-
 import TrackCreateScreen from './src/screens/TrackCreateScreen';
 import TrackDetailScreen from './src/screens/TrackDetailScreen';
 import TrackListScreen from './src/screens/TrackListScreen';
@@ -22,9 +22,7 @@ const trackListFlow = createStackNavigator({
 
 trackListFlow.navigationOptions = {
   title: 'Tracks',
-  tabBarIcon: (
-    <FontAwesome style={{ color: 'grey' }} name="th-list" size={20} />
-  ),
+  tabBarIcon: <FontAwesome style={{ color: 'grey' }} name="th-list" size={20} />,
 };
 
 const switchNavigator = createSwitchNavigator({
@@ -46,6 +44,7 @@ export default () => {
     <TrackContext>
       <LocationContext>
         <AuthProvider>
+          <StatusBar barStyle="dark-content" />
           <App
             ref={(navigator) => {
               setNavigator(navigator);
