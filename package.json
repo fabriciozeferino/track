@@ -8,10 +8,13 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo/react-native-action-sheet": "^3.7.0",
     "@react-native-community/masked-view": "^0.1.6",
     "axios": "^0.19.2",
     "expo": "~37.0.3",
+    "expo-image-picker": "~8.1.0",
     "expo-location": "~8.1.0",
+    "expo-permissions": "~8.1.0",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-hook-form": "^5.6.1",

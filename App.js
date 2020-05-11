@@ -12,8 +12,10 @@ import { Provider as AuthProvider } from './src/context/AuthContext';
 import { Provider as LocationContext } from './src/context/LocationContext';
 import { Provider as TrackContext } from './src/context/TrackContext';
 import { FontAwesome } from '@expo/vector-icons';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { setNavigator } from './src/navigationRef';
 import ResolveAuthScreen from './src/screens/ResolveAuthScreen';
+import AvatarScreen from './src/screens/AvatarScreen';
 
 const trackListFlow = createStackNavigator({
   TrackList: TrackListScreen,
@@ -22,18 +24,30 @@ const trackListFlow = createStackNavigator({
 
 trackListFlow.navigationOptions = {
   title: 'Tracks',
-  tabBarIcon: <FontAwesome style={{ color: 'grey' }} name="th-list" size={20} />,
+  tabBarIcon: ({ tintColor }) => <FontAwesome name="th-list" color={tintColor} size={24} />,
+};
+
+const accountFlow = createStackNavigator({
+  Account: AccountScreen,
+  Avatar: AvatarScreen,
+});
+
+accountFlow.navigationOptions = {
+  title: 'Profile',
+  tabBarIcon: ({ tintColor }) => <FontAwesome name="user" color={tintColor} size={24} />,
 };
 
 const switchNavigator = createSwitchNavigator({
   ResolveAuth: ResolveAuthScreen,
+
   loginFlow: createStackNavigator({
     Signin: SigninScreen,
   }),
+
   mainFlow: createBottomTabNavigator({
     trackListFlow,
     TrackCreate: TrackCreateScreen,
-    Account: AccountScreen,
+    accountFlow,
   }),
 });
 
@@ -41,17 +55,19 @@ const App = createAppContainer(switchNavigator);
 
 export default () => {
   return (
-    <TrackContext>
-      <LocationContext>
-        <AuthProvider>
-          <StatusBar barStyle="dark-content" />
-          <App
-            ref={(navigator) => {
-              setNavigator(navigator);
-            }}
-          />
-        </AuthProvider>
-      </LocationContext>
-    </TrackContext>
+    <ActionSheetProvider>
+      <TrackContext>
+        <LocationContext>
+          <AuthProvider>
+            <StatusBar barStyle="dark-content" />
+            <App
+              ref={(navigator) => {
+                setNavigator(navigator);
+              }}
+            />
+          </AuthProvider>
+        </LocationContext>
+      </TrackContext>
+    </ActionSheetProvider>
   );
 };
