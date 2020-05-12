@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Text, Avatar, ListItem } from 'react-native-elements';
+import { Button, Text, Avatar, ListItem, Divider } from 'react-native-elements';
 import { SafeAreaView } from 'react-navigation';
 import Spacer from '../components/Spacer';
 import { Context as AuthContext } from '../context/AuthContext';
@@ -27,6 +27,7 @@ const AccountScreen = ({ navigation }) => {
         </Text>
         <Text style={{ color: 'grey' }}>Developer</Text>
       </View>
+      <Divider style={{ marginBottom: 5 }} />
       <View style={styles.infoContainer}>
         <Text h4>Holidays</Text>
         <Text>Holidays</Text>
@@ -40,7 +41,6 @@ const AccountScreen = ({ navigation }) => {
         <Text>Holidays</Text>
         <Text>Holidays</Text>
       </View>
-
       <View style={styles.signoutContainer}>
         <Button title="Sign Out" onPress={signout} />
       </View>
@@ -60,10 +60,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     paddingHorizontal: 15,
-    paddingVertical: 5,
+    paddingVertical: 15,
   },
   avatarContainer: {
-    marginBottom: 30,
+    marginBottom: 10,
   },
   infoContainer: {
     flex: 1,
