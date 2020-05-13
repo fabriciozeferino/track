@@ -1,55 +1,81 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Avatar, Button, Icon } from 'react-native-elements';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, View, Linking } from 'react-native';
+import { Avatar, Button, Text, Icon, Alert, Overlay } from 'react-native-elements';
 import { connectActionSheet } from '@expo/react-native-action-sheet';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import Constants from 'expo-constants';
-import * as Permissions from 'expo-permissions';
-import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
+import useLibrary from '../hooks/useLibrary';
+import Constants from 'expo-constants';
 
 const AvatarScreen = () => {
   const [avatar, setAvatar] = useState();
   const [cameraOn, setCameraOn] = useState(false);
 
-  const imagePickerCall = async (component) => {
-    const { status: libraryHasPermission } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    const { status: cameraHasPermission } = await Permissions.askAsync(Permissions.CAMERA);
+  //   const [hasPermission, setHasPermission] = useState(null);
 
-    if (cameraHasPermission === null || libraryHasPermission === null) {
-      return <View />;
+  //   useEffect(() => {
+  //     async () => {
+  //       const { status } = await Camera.requestPermissionsAsync();
+  //       setHasPermission(status === 'granted');
+  //     };
+  //   }, []);
+
+  //   if (hasPermission === null) {
+  //     return <View />;
+  //   }
+  //   if (hasPermission === false) {
+  //     return (
+  //       <Text>No access to camera or library, go to settings and reset all the permissions related to this app</Text>
+  //     );
+  //   }
+
+  //   const [ratio, setRatio] = useState('4:3');
+  //   const cam = useRef();
+
+  //   const prepareRatio = async () => {
+  //     if (Platform.OS === 'android' && Camera.isAvailableAsync()) {
+  //       const ratios = await getSupportedRatiosAsync();
+
+  //       console.log(ratios);
+
+  //       // See if the current device has your desired ratio, otherwise get the maximum supported one
+  //       // Usually the last element of "ratios" is the maximum supported ratio
+  //       const ratio = ratios.find((ratio) => ratio === DESIRED_RATIO) || ratios[ratios.length - 1];
+
+  //       setState({ ratio });
+  //     }
+  //   };
+
+  //   const cameraPickerCall = async () => {
+  //     setCameraOn(true);
+  //   };
+
+  //   const takePicture = async () => {
+  //     if (this.camera) {
+  //       let photo = await this.camera.takePictureAsync();
+
+  //       setAvatar(photo);
+  //       setCameraOn(false);
+  //     }
+  //   };
+
+  // const imagePickerCall = async (component) => {
+  //   if (Constants.platform.ios) {
+  //     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+  //     if (status !== 'granted') {
+  //       alert('Sorry, we need camera roll permissions to make this work!');
+  //     }
+  //   }
+
+  const [imagePickerCall, error] = useLibrary(setAvatar);
+
+  if (error === 'no_permission') {
+    alert('Sorry, we need camera roll permissions to make this work!');
+
+    if (Constants.platform.ios) {
+      Linking.openURL('app-settings:');
     }
-    if (cameraHasPermission === false || libraryHasPermission === false) {
-      return (
-        <Text>No access to camera or library, go to settings and reset all the permissions related to this app</Text>
-      );
-    }
-
-    switch (component) {
-      case 'camera':
-        setCameraOn(true);
-
-        break;
-      case 'library':
-        let libraryImage = await ImagePicker.launchImageLibraryAsync({
-          allowsEditing: true,
-          aspect: [4, 3],
-          quality: 1,
-        });
-
-        setAvatar(libraryImage);
-        break;
-    }
-  };
-
-  const takePicture = async () => {
-    if (this.camera) {
-      let photo = await this.camera.takePictureAsync();
-
-      setAvatar(photo);
-      setCameraOn(false);
-    }
-  };
+  }
 
   async function uploadImage() {
     const data = new FormData();
@@ -68,7 +94,6 @@ const AvatarScreen = () => {
     const options = ['Open Camera', 'Choose From Library', 'Cancel'];
     const destructiveButtonIndex = 0;
     const cancelButtonIndex = 2;
-
     showActionSheetWithOptions(
       {
         title: 'Profile Photo',
@@ -79,10 +104,10 @@ const AvatarScreen = () => {
       (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
-            imagePickerCall('camera');
+            cameraPickerCall();
             break;
           case 1:
-            imagePickerCall('library');
+            imagePickerCall();
             break;
         }
       }
@@ -94,14 +119,17 @@ const AvatarScreen = () => {
       <View style={styles.container}>
         <View style={styles.avatarContainer}>
           {cameraOn ? (
-            <View style={{ borderRadius: '100%', overflow: 'hidden' }}>
-              <Camera
+            <View style={{ borderRadius: 75, overflow: 'hidden' }}>
+              <Text>hi</Text>
+              {/* <Camera
                 style={{ width: 150, height: 150 }}
                 type={Camera.Constants.Type.front}
-                ref={(ref) => {
-                  this.camera = ref;
-                }}
-              />
+                skipProcessing={true}
+                ratio="4:3"
+                //ref={(cam) => (this.cam = cam)}
+                onCameraReady={prepareRatio} // You can only get the supported ratios when the camera is mounted
+                ratio={ratio}
+              /> */}
             </View>
           ) : (
             <Avatar
