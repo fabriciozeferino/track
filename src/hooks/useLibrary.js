@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import { Linking } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
-import Constants from 'expo-constants';
 
 export default (callback) => {
   const [error, setError] = useState(null);
@@ -28,12 +26,7 @@ export default (callback) => {
           callback(result);
         }
       }
-
-      console.log('sttus', status);
-      console.log('sttus', error);
     } catch (error) {
-      console.log(error);
-
       setError(error);
     }
   };
